@@ -359,7 +359,7 @@ var prototypeUpdateHelper = new UpdateHelper([
 	};
 
 	function notify(property, value){
-		var message = messages[arguments.length == 1 ? 'getting' : 'setting'].evaluate({
+		var message = messages[arguments.length === 1 ? 'getting' : 'setting'].evaluate({
 			property: property,
 			value   : Object.inspect(value),
 		});
@@ -385,7 +385,7 @@ var prototypeUpdateHelper = new UpdateHelper([
 	function checkProperties(hash){
 		storeProperties(hash);
 		var current = Object.keys(hash);
-		if(current.length == hash.__properties.length){
+		if(current.length === hash.__properties.length){
 			return;
 		}
 		current.each(function(prop){
@@ -420,7 +420,7 @@ var prototypeUpdateHelper = new UpdateHelper([
 
 	$H(Hash.prototype).each(function(method){
 		var key = method.key;
-		if(!Object.isFunction(method.value) || key == 'initialize'){
+		if(!Object.isFunction(method.value) || key === 'initialize'){
 			return;
 		}
 		Hash.prototype[key] = Hash.prototype[key].wrap(function(proceed){

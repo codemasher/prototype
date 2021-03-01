@@ -135,10 +135,11 @@ Prototype.Selector = (function(){
 	 **/
 	function find(elements, expression, index){
 		index = index || 0;
-		var match = Prototype.Selector.match, length = elements.length, matchIndex = 0, i;
+		var match = Prototype.Selector.match;
+		var length = elements.length, matchIndex = 0, i;
 
 		for(i = 0; i < length; i++){
-			if(match(elements[i], expression) && index == matchIndex++){
+			if(match(elements[i], expression) && index === matchIndex++){
 				return elements[i];
 			}
 		}

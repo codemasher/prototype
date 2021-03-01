@@ -116,8 +116,8 @@ Ajax.Updater = Class.create(Ajax.Request, {
 		if(!options.evalScripts){
 			responseText = responseText.stripScripts();
 		}
-
-		if(receiver = $(receiver)){
+		receiver = $(receiver);
+		if(receiver){
 			if(options.insertion){
 				if(Object.isString(options.insertion)){
 					var insertion = {};

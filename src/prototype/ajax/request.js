@@ -229,7 +229,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 
 	onStateChange: function(){
 		var readyState = this.transport.readyState;
-		if(readyState > 1 && !((readyState == 4) && this._complete)){
+		if(readyState > 1 && !(readyState === 4 && this._complete)){
 			this.respondToReadyState(this.transport.readyState);
 		}
 	},
@@ -260,7 +260,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 		}
 
 		// user-defined headers
-		if(typeof this.options.requestHeaders == 'object'){
+		if(typeof this.options.requestHeaders === 'object'){
 			var extras = this.options.requestHeaders;
 
 			if(Object.isFunction(extras.push)){
@@ -277,7 +277,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 
 		// skip null or undefined values
 		for(var name in headers){
-			if(headers[name] != null){
+			if(headers[name] !== undefined && headers[name] !== null){
 				this.transport.setRequestHeader(name, headers[name]);
 			}
 		}
@@ -290,7 +290,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 	 **/
 	success: function(){
 		var status = this.getStatus();
-		return !status || (status >= 200 && status < 300) || status == 304;
+		return !status || (status >= 200 && status < 300) || status === 304;
 	},
 
 	getStatus: function(){
@@ -309,7 +309,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 	respondToReadyState: function(readyState){
 		var state = Ajax.Request.Events[readyState], response = new Ajax.Response(this);
 
-		if(state == 'Complete'){
+		if(state === 'Complete'){
 			try{
 				this._complete = true;
 				(this.options['on' + response.status]
@@ -321,7 +321,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 			}
 
 			var contentType = response.getHeader('Content-type');
-			if(this.options.evalJS == 'force'
+			if(this.options.evalJS === 'force'
 			   || (this.options.evalJS && this.isSameOrigin() && contentType
 			       && contentType.match(/^\s*(text|application)\/(x-)?(java|ecma)script(;.*)?\s*$/i))){
 				this.evalResponse();
@@ -338,7 +338,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 			Ajax.Responders.dispatch('on' + state, this, response, response.headerJSON);
 		}
 
-		if(state == 'Complete'){
+		if(state === 'Complete'){
 			// avoid memory leak in MSIE: clean up
 			this.transport.onreadystatechange = Prototype.emptyFunction;
 		}
@@ -346,7 +346,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 
 	isSameOrigin: function(){
 		var m = this.url.match(/^\s*https?:\/\/[^\/]*/);
-		return !m || (m[0] == '#{protocol}//#{domain}#{port}'.interpolate({
+		return !m || (m[0] === '#{protocol}//#{domain}#{port}'.interpolate({
 			protocol: location.protocol,
 			domain  : document.domain,
 			port    : location.port ? ':' + location.port : '',

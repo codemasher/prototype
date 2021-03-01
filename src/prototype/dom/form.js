@@ -104,7 +104,7 @@ var Form = {
 		// the default if omitted was false; respect that, but if they pass in an
 		// options object (e.g., the new signature) but don't specify the hash option,
 		// default true, as that's the new preferred approach.
-		if(typeof options != 'object'){
+		if(typeof options !== 'object'){
 			options = {hash: !!options};
 		}
 		else if(Object.isUndefined(options.hash)){
@@ -154,8 +154,10 @@ var Form = {
 			if(!element.disabled && element.name){
 				key = element.name;
 				value = $(element).getValue();
-				if(value != null && element.type != 'file' && (element.type != 'submit' || (!submitted &&
-				                                                                            submit !== false && (!submit || key == submit) && (submitted = true)))){
+				if(value !== undefined && value !== null && element.type !== 'file' && (element.type !== 'submit' || (
+					!submitted && submit !== false && (!submit || key === submit) &&
+					(submitted = true) // @todo: aahrg! even eslint fails to detect this assignment...
+				))){
 					result = accumulator(result, key, value);
 				}
 			}
@@ -214,11 +216,11 @@ Form.Methods = {
 
 	getElements: function(form){
 		var elements = $(form).getElementsByTagName('*');
-		var element, results = [], serializers = Form.Element.Serializers;
+		var results = [], serializers = Form.Element.Serializers;
 
-		for(var i = 0; element = elements[i]; i++){
-			if(serializers[element.tagName.toLowerCase()]){
-				results.push(element);
+		for(var i = 0; elements[i]; i++){
+			if(serializers[elements[i].tagName.toLowerCase()]){
+				results.push(elements[i]);
 			}
 		}
 		return results;
@@ -262,7 +264,7 @@ Form.Methods = {
 
 		for(var i = 0, matchingInputs = [], length = inputs.length; i < length; i++){
 			var input = inputs[i];
-			if((typeName && input.type != typeName) || (name && input.name != name)){
+			if((typeName && input.type !== typeName) || (name && input.name !== name)){
 				continue;
 			}
 			matchingInputs.push(input);
@@ -326,7 +328,7 @@ Form.Methods = {
 	 **/
 	findFirstElement: function(form){
 		var elements = $(form).getElements().findAll(function(element){
-			return 'hidden' != element.type && !element.disabled;
+			return element.type !== 'hidden' && !element.disabled;
 		});
 		var firstByIndex = elements.findAll(function(element){
 			return element.hasAttribute('tabIndex') && element.tabIndex >= 0;
@@ -432,7 +434,8 @@ Form.Methods = {
 	 *      })
 	 **/
 	request: function(form, options){
-		form = $(form), options = Object.clone(options || {});
+		form = $(form);
+		options = Object.clone(options || {});
 
 		var params = options.parameters, action = form.readAttribute('action') || '';
 		if(action.blank()){
@@ -547,7 +550,7 @@ Form.Element.Methods = {
 		element = $(element);
 		if(!element.disabled && element.name){
 			var value = element.getValue();
-			if(value != undefined){
+			if(value !== undefined){
 				var pair = {};
 				pair[element.name] = value;
 				return Object.toQueryString(pair);
@@ -682,6 +685,7 @@ Form.Element.Methods = {
 	 *      </script>
 	 **/
 	present: function(element){
+		// eslint-disable-next-line eqeqeq
 		return $(element).value != '';
 	},
 
@@ -704,7 +708,7 @@ Form.Element.Methods = {
 		element = $(element);
 		try{
 			element.focus();
-			if(element.select && (element.tagName.toLowerCase() != 'input' ||
+			if(element.select && (element.tagName.toLowerCase() !== 'input' ||
 			                      !(/^(?:button|reset|submit)$/i.test(element.type)))){
 				element.select();
 			}
@@ -804,7 +808,7 @@ Form.Element.Serializers = (function(){
 			opt = element.options[i];
 			currentValue = this.optionValue(opt);
 			if(single){
-				if(currentValue == value){
+				if(currentValue === value){
 					opt.selected = true;
 					return;
 				}
@@ -821,12 +825,13 @@ Form.Element.Serializers = (function(){
 	}
 
 	function selectMany(element){
-		var values, length = element.length;
+		var length = element.length;
 		if(!length){
 			return null;
 		}
 
-		for(var i = 0, values = []; i < length; i++){
+		var values = [];
+		for(var i = 0; i < length; i++){
 			var opt = element.options[i];
 			if(opt.selected){
 				values.push(optionValue(opt));
@@ -923,8 +928,11 @@ Abstract.TimedObserver = Class.create(PeriodicalExecuter, {
 
 	execute: function(){
 		var value = this.getValue();
-		if(Object.isString(this.lastValue) && Object.isString(value) ?
-		   this.lastValue != value : String(this.lastValue) != String(value)){
+		var isNotLastValue = Object.isString(this.lastValue) && Object.isString(value)
+			? this.lastValue !== value
+			: String(this.lastValue) !== String(value);
+
+		if(isNotLastValue){
 			this.callback(this.element, value);
 			this.lastValue = value;
 		}
@@ -1035,7 +1043,7 @@ Abstract.EventObserver = Class.create({
 		this.callback = callback;
 
 		this.lastValue = this.getValue();
-		if(this.element.tagName.toLowerCase() == 'form'){
+		if(this.element.tagName.toLowerCase() === 'form'){
 			this.registerFormCallbacks();
 		}
 		else{
@@ -1045,7 +1053,7 @@ Abstract.EventObserver = Class.create({
 
 	onElementEvent: function(){
 		var value = this.getValue();
-		if(this.lastValue != value){
+		if(this.lastValue !== value){
 			this.callback(this.element, value);
 			this.lastValue = value;
 		}

@@ -188,7 +188,7 @@
 
 		// Fix a Safari bug where a text node gets passed as the target of an
 		// anchor click rather than the anchor itself.
-		return node.nodeType == Node.TEXT_NODE ? node.parentNode : node;
+		return node.nodeType === Node.TEXT_NODE ? node.parentNode : node;
 	}
 
 	/**
@@ -385,6 +385,7 @@
 	}
 
 	if(MOUSEENTER_MOUSELEAVE_EVENTS_SUPPORTED){
+		// eslint-disable-next-line no-func-assign
 		getDOMEventName = Prototype.K;
 	}
 

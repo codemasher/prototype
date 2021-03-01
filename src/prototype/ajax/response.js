@@ -68,14 +68,14 @@ Ajax.Response = Class.create({
 		var transport  = this.transport = request.transport,
 		    readyState = this.readyState = transport.readyState;
 
-		if((readyState > 2 && !Prototype.Browser.IE) || readyState == 4){
+		if((readyState > 2 && !Prototype.Browser.IE) || readyState === 4){
 			this.status = this.getStatus();
 			this.statusText = this.getStatusText();
 			this.responseText = String.interpret(transport.responseText);
 			this.headerJSON = this._getHeaderJSON();
 		}
 
-		if(readyState == 4){
+		if(readyState === 4){
 			var xml = transport.responseXML;
 			this.responseXML = Object.isUndefined(xml) ? null : xml;
 			this.responseJSON = this._getResponseJSON();
@@ -188,7 +188,7 @@ Ajax.Response = Class.create({
 
 	_getResponseJSON: function(){
 		var options = this.request.options;
-		if(!options.evalJSON || (options.evalJSON != 'force' &&
+		if(!options.evalJSON || (options.evalJSON !== 'force' &&
 		                         !(this.getHeader('Content-type') || '').include('application/json')) ||
 		   this.responseText.blank()){
 			return null;

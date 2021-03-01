@@ -82,11 +82,11 @@ var Position = {
 		if(!mode){
 			return 0;
 		}
-		if(mode == 'vertical'){
+		if(mode === 'vertical'){
 			return ((this.offset[1] + element.offsetHeight) - this.ycomp) /
 			       element.offsetHeight;
 		}
-		if(mode == 'horizontal'){
+		if(mode === 'horizontal'){
 			return ((this.offset[0] + element.offsetWidth) - this.xcomp) /
 			       element.offsetWidth;
 		}

@@ -13,10 +13,10 @@ Object.extend(String, {
 	/**
 	 *  String.interpret(value) -> String
 	 *
-	 *  Coerces `value` into a string. Returns an empty string for `null`.
+	 *  Coerces `value` into a string. Returns an empty string for `null` and `undefined`.
 	 **/
 	interpret  : function(value){
-		return value == null ? '' : String(value);
+		return value === undefined || value === null ? '' : String(value);
 	},
 	specialChar: {
 		'\b': '\\b',
@@ -115,7 +115,8 @@ Object.extend(String.prototype, (function(){
 				source = source.slice(match.index + match[0].length);
 			}
 			else{
-				result += source, source = '';
+				result += source;
+				source = '';
 			}
 		}
 		return result;
@@ -503,11 +504,12 @@ Object.extend(String.prototype, (function(){
 		}
 
 		return match[1].split(separator || '&').inject({}, function(hash, pair){
-			if((pair = pair.split('='))[0]){
+			pair = pair.split('=');
+			if(pair[0]){
 				var key   = decodeURIComponent(pair.shift()),
 				    value = pair.length > 1 ? pair.join('=') : pair[0];
 
-				if(value != undefined){
+				if(value !== undefined){
 					value = value.gsub('+', ' ');
 					value = decodeURIComponent(value);
 				}
@@ -687,6 +689,7 @@ Object.extend(String.prototype, (function(){
 	 *      // (displayed as "I'm so happy." in an alert dialog or the console)
 	 **/
 	function inspect(useDoubleQuotes){
+		// eslint-disable-next-line no-control-regex
 		var escapedString = this.replace(/[\x00-\x1f\\]/g, function(character){
 			if(character in String.specialChar){
 				return String.specialChar[character];
@@ -880,6 +883,7 @@ Object.extend(String.prototype, (function(){
 	 *      //-> false
 	 **/
 	function empty(){
+		// eslint-disable-next-line eqeqeq
 		return this == '';
 	}
 

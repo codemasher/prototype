@@ -451,7 +451,7 @@
 					return;
 				}
 				var value = this.get(key);
-				if(value != null){
+				if(value !== undefined && value !== null && value !== ''){
 					obj[key] = value;
 				}
 			}, this);
@@ -510,7 +510,7 @@
 				}
 
 				var value = this.get(key);
-				if(value != null){
+				if(value !== undefined && value !== null && value !== ''){
 					css[cssNameFor(key)] = value + 'px';
 				}
 			}, this);
@@ -528,6 +528,7 @@
 		 *
 		 *  A list of all measurable properties.
 		 **/
+		// eslint-disable-next-line max-len
 		PROPERTIES: $w('height width top left right bottom border-left border-right border-top border-bottom padding-left padding-right padding-top padding-bottom margin-top margin-bottom margin-left margin-right padding-box-width padding-box-height border-box-width border-box-height margin-box-width margin-box-height'),
 
 		/**
@@ -537,6 +538,7 @@
 		 *  directly to CSS properties — they're combinations of other
 		 *  properties.
 		 **/
+		// eslint-disable-next-line max-len
 		COMPOSITE_PROPERTIES: $w('padding-box-width padding-box-height margin-box-width margin-box-height border-box-width border-box-height'),
 
 		COMPUTATIONS: {
@@ -763,10 +765,7 @@
 		 *  arbitrary element.
 		 **/
 		relativeTo: function(offset){
-			return new Element.Offset(
-				this.left - offset.left,
-				this.top - offset.top,
-			);
+			return new Element.Offset(this.left - offset.left, this.top - offset.top);
 		},
 
 		/**

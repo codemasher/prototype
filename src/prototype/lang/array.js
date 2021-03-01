@@ -257,7 +257,7 @@ Array.from = $A;
 	 **/
 	function compact(){
 		return this.select(function(value){
-			return value != null;
+			return value !== undefined && value !== null;
 		});
 	}
 
@@ -355,7 +355,7 @@ Array.from = $A;
 	 **/
 	function uniq(sorted){
 		return this.inject([], function(array, value, index){
-			if(0 == index || (sorted ? array.last() != value : !array.include(value))){
+			if(index === 0 || (sorted ? array.last() !== value : !array.include(value))){
 				array.push(value);
 			}
 			return array;

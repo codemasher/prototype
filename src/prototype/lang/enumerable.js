@@ -146,7 +146,7 @@ var Enumerable = (function(){
 			this._each(iterator, context);
 		}
 		catch(e){
-			if(e != $break){
+			if(e !== $break){
 				throw e;
 			}
 		}
@@ -258,7 +258,8 @@ var Enumerable = (function(){
 		iterator = iterator || Prototype.K;
 		var result = false;
 		this.each(function(value, index){
-			if(result = !!iterator.call(context, value, index, this)){
+			result = !!iterator.call(context, value, index, this)
+			if(result){
 				throw $break;
 			}
 		}, this);
@@ -414,12 +415,13 @@ var Enumerable = (function(){
 	 *      // -> true ('3' == 3)
 	 **/
 	function include(object){
-		if(Object.isFunction(this.indexOf) && this.indexOf(object) != -1){
+		if(Object.isFunction(this.indexOf) && this.indexOf(object) !== -1){
 			return true;
 		}
 
 		var found = false;
 		this.each(function(value){
+			// eslint-disable-next-line eqeqeq
 			if(value == object){
 				found = true;
 				throw $break;
@@ -562,7 +564,7 @@ var Enumerable = (function(){
 		var result;
 		this.each(function(value, index){
 			value = iterator.call(context, value, index, this);
-			if(result == null || value >= result){
+			if(result === undefined || result === null || value >= result){
 				result = value;
 			}
 		}, this);
@@ -603,7 +605,7 @@ var Enumerable = (function(){
 		var result;
 		this.each(function(value, index){
 			value = iterator.call(context, value, index, this);
-			if(result == null || value < result){
+			if(result === undefined || result === null || value < result){
 				result = value;
 			}
 		}, this);

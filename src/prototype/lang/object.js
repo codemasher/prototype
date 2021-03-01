@@ -184,8 +184,8 @@
 			case 'number':
 				return isFinite(value) ? String(value) : 'null';
 			case 'object':
-
-				for(var i = 0, length = stack.length; i < length; i++){
+				var i, length, str;
+				for(i = 0, length = stack.length; i < length; i++){
 					if(stack[i] === value){
 						throw new TypeError('Cyclic reference to \'' + value + '\' in object');
 					}
@@ -194,18 +194,19 @@
 
 				var partial = [];
 				if(_class === ARRAY_CLASS){
-					for(var i = 0, length = value.length; i < length; i++){
-						var str = Str(i, value, stack);
+					for(i = 0, length = value.length; i < length; i++){
+						str = Str(i, value, stack);
 						partial.push(typeof str === 'undefined' ? 'null' : str);
 					}
 					partial = '[' + partial.join(',') + ']';
 				}
 				else{
 					var keys = Object.keys(value);
-					for(var i = 0, length = keys.length; i < length; i++){
-						var key = keys[i], str = Str(key, value, stack);
+					for(i = 0, length = keys.length; i < length; i++){
+						var _key = keys[i];
+						str = Str(_key, value, stack);
 						if(typeof str !== 'undefined'){
-							partial.push(key.inspect(true) + ':' + str);
+							partial.push(_key.inspect(true) + ':' + str);
 						}
 					}
 					partial = '{' + partial.join(',') + '}';
@@ -383,7 +384,7 @@
 	 *      //-> false
 	 **/
 	function isElement(object){
-		return !!(object && object.nodeType == 1);
+		return !!(object && object.nodeType === 1);
 	}
 
 	/**

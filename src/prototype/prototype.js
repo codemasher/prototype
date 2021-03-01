@@ -77,7 +77,7 @@ var Prototype = {
 		var ua = navigator.userAgent;
 		// Opera (at least) 8.x+ has "Opera" as a [[Class]] of `window.opera`
 		// This is a safer inference than plain boolean type conversion of `window.opera`
-		var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
+		var isOpera = Object.prototype.toString.call(window.opera) === '[object Opera]';
 		return {
 			IE          : !!window.attachEvent && !isOpera,
 			Opera       : isOpera,

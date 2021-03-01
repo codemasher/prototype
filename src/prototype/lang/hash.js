@@ -349,7 +349,7 @@ var Hash = Class.create(Enumerable, (function(){
 		return this.inject([], function(results, pair){
 			var key = encodeURIComponent(pair.key), values = pair.value;
 
-			if(values && typeof values == 'object'){
+			if(values && typeof values === 'object'){
 				if(Object.isArray(values)){
 					// We used to use `Array#map` here to get the query pair for each
 					// item in the array, but that caused test regressions once we

@@ -246,8 +246,9 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
 
 	updateComplete: function(response){
 		if(this.options.decay){
-			this.decay = (response.responseText == this.lastText ?
-			              this.decay * this.options.decay : 1);
+			this.decay = response.responseText === this.lastText
+				? this.decay * this.options.decay
+				: 1;
 
 			this.lastText = response.responseText;
 		}

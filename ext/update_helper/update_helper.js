@@ -77,10 +77,10 @@ var UpdateHelper = Class.create({
 	},
 
 	log: function(message, type){
-		if(type == 'error'){
+		if(type === 'error'){
 			console.error(message);
 		}
-		else if(type == 'warn'){
+		else if(type === 'warn'){
 			console.warn(message);
 		}
 		else{

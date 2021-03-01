@@ -147,7 +147,7 @@ var Class = (function(){
 		for(var i = 0, length = properties.length; i < length; i++){
 			var property = properties[i], value = source[property];
 			if(ancestor && Object.isFunction(value) &&
-			   value.argumentNames()[0] == '$super'){
+			   value.argumentNames()[0] === '$super'){
 				var method = value;
 				value = (function(m){
 					return function(){

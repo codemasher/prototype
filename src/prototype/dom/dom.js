@@ -478,7 +478,7 @@
 			var el = document.createElement('table');
 			if(el && el.tBodies){
 				el.innerHTML = '<tbody><tr><td>test</td></tr></tbody>';
-				var isBuggy = typeof el.tBodies[0] == 'undefined';
+				var isBuggy = typeof el.tBodies[0] === 'undefined';
 				el = null;
 				return isBuggy;
 			}
@@ -586,8 +586,8 @@
 		// Purge the element's existing contents of all storage keys and
 		// event listeners, since said content will be replaced no matter
 		// what.
-		var descendants = element.getElementsByTagName('*'),
-		    i           = descendants.length;
+		var descendants = element.getElementsByTagName('*');
+		var i           = descendants.length;
 		while(i--){
 			purgeElement(descendants[i]);
 		}
@@ -610,8 +610,8 @@
 				}
 
 				var nodes = getContentFromAnonymousElement(tagName, content.stripScripts());
-				for(var i = 0, node; node = nodes[i]; i++){
-					element.appendChild(node);
+				for(i = 0; nodes[i]; i++){
+					element.appendChild(nodes[i]);
 				}
 
 			}
@@ -790,6 +790,7 @@
 	}
 
 	if('outerHTML' in document.documentElement){
+		// eslint-disable-next-line no-func-assign
 		replace = replace_IE;
 	}
 
@@ -836,8 +837,8 @@
 			childNodes.reverse();
 		}
 
-		for(var i = 0, node; node = childNodes[i]; i++){
-			method(element, node);
+		for(var i = 0; childNodes[i]; i++){
+			method(element, childNodes[i]);
 		}
 
 		content.evalScripts.bind(content).defer();
@@ -912,7 +913,7 @@
 	 *  Wraps an element inside another, then returns the wrapper.
 	 *
 	 *  If the given element exists on the page, [[Element.wrap]] will wrap it in
-	 *  place — its position will remain the same.
+	 *  place — its position will remain the same.
 	 *
 	 *  The `wrapper` argument can be _either_ an existing [[Element]] _or_ a
 	 *  string representing the tag name of an element to be created. The optional
@@ -1232,7 +1233,7 @@
 		element = $(element);
 		maximumLength = maximumLength || -1;
 		var elements = [];
-
+		// eslint-disable-next-line no-cond-assign
 		while(element = element[property]){
 			if(element.nodeType === Node.ELEMENT_NODE){
 				elements.push(element);
@@ -1517,17 +1518,23 @@
 	// `recursivelyCollect`, except it stops at the first match and doesn't
 	// extend any elements except for the returned element.
 	function _recursivelyFind(element, property, expression, index){
-		element = $(element), expression = expression || 0, index = index || 0;
+		element = $(element);
+		expression = expression || 0;
+		index = index || 0;
+
 		if(Object.isNumber(expression)){
-			index = expression, expression = null;
+			index = expression;
+			expression = null;
 		}
 
+		// eslint-disable-next-line no-cond-assign
 		while(element = element[property]){
 			// Skip any non-element nodes.
 			if(element.nodeType !== 1){
 				continue;
 			}
 			// Skip any nodes that don't match the expression, if there is one.
+			// noinspection JSVoidFunctionReturnValueUsed
 			if(expression && !Prototype.Selector.match(element, expression)){
 				continue;
 			}
@@ -2061,9 +2068,10 @@
 		element = $(element);
 		var expressions = SLICE.call(arguments, 1).join(', ');
 		var siblings = Element.siblings(element), results = [];
-		for(var i = 0, sibling; sibling = siblings[i]; i++){
-			if(Prototype.Selector.match(sibling, expressions)){
-				results.push(sibling);
+		for(var i = 0; siblings[i]; i++){
+			// noinspection JSVoidFunctionReturnValueUsed
+			if(Prototype.Selector.match(siblings[i], expressions)){
+				results.push(siblings[i]);
 			}
 		}
 
@@ -2567,7 +2575,8 @@
 	var CAMEL_CASED_ATTRIBUTE_NAMES = $w('colSpan rowSpan vAlign dateTime ' +
 	                                     'accessKey tabIndex encType maxLength readOnly longDesc frameBorder');
 
-	for(var i = 0, attr; attr = CAMEL_CASED_ATTRIBUTE_NAMES[i]; i++){
+	for(var i = 0; CAMEL_CASED_ATTRIBUTE_NAMES[i]; i++){
+		var attr = CAMEL_CASED_ATTRIBUTE_NAMES[i];
 		ATTRIBUTE_TRANSLATIONS.write.names[attr.toLowerCase()] = attr;
 		ATTRIBUTE_TRANSLATIONS.has.names[attr.toLowerCase()] = attr;
 	}
@@ -2784,6 +2793,7 @@
 	 **/
 	function setOpacity(element, value){
 		element = $(element);
+		// eslint-disable-next-line eqeqeq
 		if(value == 1 || value === ''){
 			value = '';
 		}
@@ -3125,8 +3135,8 @@
 		}
 		else{
 			if(Object.isArray(tagName)){
-				for(var i = 0, tag; tag = tagName[i]; i++){
-					addMethodsToTagName(tag, methods);
+				for(var i = 0; tagName[i]; i++){
+					addMethodsToTagName(tagName[i], methods);
 				}
 			}
 			else{
@@ -3167,11 +3177,11 @@
 		Object.extend(Form, Form.Methods);
 		Object.extend(Form.Element, Form.Element.Methods);
 		Object.extend(Element.Methods.ByTag, {
-			"FORM"    : Object.clone(Form.Methods),
-			"INPUT"   : Object.clone(Form.Element.Methods),
-			"SELECT"  : Object.clone(Form.Element.Methods),
-			"TEXTAREA": Object.clone(Form.Element.Methods),
-			"BUTTON"  : Object.clone(Form.Element.Methods)
+			'FORM'    : Object.clone(Form.Methods),
+			'INPUT'   : Object.clone(Form.Element.Methods),
+			'SELECT'  : Object.clone(Form.Element.Methods),
+			'TEXTAREA': Object.clone(Form.Element.Methods),
+			'BUTTON'  : Object.clone(Form.Element.Methods)
 		});
 	}
 

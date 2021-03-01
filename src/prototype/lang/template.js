@@ -146,12 +146,12 @@ var Template = Class.create({
 		}
 
 		return this.template.gsub(this.pattern, function(match){
-			if(object == null){
+			if(object === undefined || object === null){
 				return (match[1] + '');
 			}
 
 			var before = match[1] || '';
-			if(before == '\\'){
+			if(before === '\\'){
 				return match[2];
 			}
 
@@ -159,17 +159,17 @@ var Template = Class.create({
 			    pattern            = /^([^.[]+|\[((?:.*?[^\\])?)\])(\.|\[|$)/;
 
 			match = pattern.exec(expr);
-			if(match == null){
+			if(match === undefined || match === null){
 				return before;
 			}
 
-			while(match != null){
+			while(match !== null && match !== undefined){
 				var comp = match[1].startsWith('[') ? match[2].replace(/\\\\]/g, ']') : match[1];
 				ctx = ctx[comp];
-				if(null == ctx || '' == match[3]){
+				if(ctx === undefined || ctx === null || match[3] === ''){
 					break;
 				}
-				expr = expr.substring('[' == match[3] ? match[1].length : match[0].length);
+				expr = expr.substring(match[3] === '[' ? match[1].length : match[0].length);
 				match = pattern.exec(expr);
 			}
 
