@@ -2,7 +2,7 @@
  * class RegExp
  *
  *  Extensions to the built-in `RegExp` object.
-**/
+ **/
 
 /**
  *  RegExp#match(str) -> Boolean
@@ -21,7 +21,7 @@ RegExp.prototype.match = RegExp.prototype.test;
  *  regular expression.
  *
  *  Use before passing a string into the `RegExp` constructor.
-**/
-RegExp.escape = function(str) {
-  return String(str).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
+ **/
+RegExp.escape = function(str){
+	return String(str).replace(/([.*+?^=!:${}()|[\]\/\\])/g, '\\$1');
 };

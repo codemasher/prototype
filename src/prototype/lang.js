@@ -17,13 +17,13 @@
  *
  * Additions to JavaScript's "standard library" and extensions to
  * built-in JavaScript objects.
-**/
+ **/
 
-var Abstract = { };
+var Abstract = {};
 
 /** section: Language
  * Try
-**/
+ **/
 
 /** deprecated
  *  Try.these(function...) -> ?
@@ -65,17 +65,19 @@ var Abstract = { };
  *      };
  **/
 var Try = {
-  these: function() {
-    var returnValue;
+	these: function(){
+		var returnValue;
 
-    for (var i = 0, length = arguments.length; i < length; i++) {
-      var lambda = arguments[i];
-      try {
-        returnValue = lambda();
-        break;
-      } catch (e) { }
-    }
+		for(var i = 0, length = arguments.length; i < length; i++){
+			var lambda = arguments[i];
+			try{
+				returnValue = lambda();
+				break;
+			}
+			catch(e){
+			}
+		}
 
-    return returnValue;
-  }
+		return returnValue;
+	},
 };

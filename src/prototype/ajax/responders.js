@@ -64,57 +64,64 @@
  *    the request completes, status-specific callbacks are called, and possible
  *    automatic behaviors are processed. Guaranteed to run regardless of what
  *    happened during the request.
-**/
+ **/
 
 Ajax.Responders = {
-  responders: [],
+	responders: [],
 
-  _each: function(iterator, context) {
-    this.responders._each(iterator, context);
-  },
+	_each: function(iterator, context){
+		this.responders._each(iterator, context);
+	},
 
-  /**
-   *  Ajax.Responders.register(responder) -> undefined
-   *  - responder (Object): A list of functions with keys corresponding to the
-   *    names of possible callbacks.
-   *
-   *  Add a group of responders to all Ajax requests.
-  **/
-  register: function(responder) {
-    if (!this.include(responder))
-      this.responders.push(responder);
-  },
+	/**
+	 *  Ajax.Responders.register(responder) -> undefined
+	 *  - responder (Object): A list of functions with keys corresponding to the
+	 *    names of possible callbacks.
+	 *
+	 *  Add a group of responders to all Ajax requests.
+	 **/
+	register: function(responder){
+		if(!this.include(responder)){
+			this.responders.push(responder);
+		}
+	},
 
-  /**
-   *  Ajax.Responders.unregister(responder) -> undefined
-   *  - responder (Object): A list of functions with keys corresponding to the
-   *    names of possible callbacks.
-   *
-   *  Remove a previously-added group of responders.
-   *
-   *  As always, unregistering something requires you to use the very same
-   *  object you used at registration. If you plan to use `unregister`, be sure
-   *  to assign your responder to a _variable_ before passing it into
-   *  [[Ajax.Responders#register]] &mdash; don't pass it an object literal.
-  **/
-  unregister: function(responder) {
-    this.responders = this.responders.without(responder);
-  },
+	/**
+	 *  Ajax.Responders.unregister(responder) -> undefined
+	 *  - responder (Object): A list of functions with keys corresponding to the
+	 *    names of possible callbacks.
+	 *
+	 *  Remove a previously-added group of responders.
+	 *
+	 *  As always, unregistering something requires you to use the very same
+	 *  object you used at registration. If you plan to use `unregister`, be sure
+	 *  to assign your responder to a _variable_ before passing it into
+	 *  [[Ajax.Responders#register]] &mdash; don't pass it an object literal.
+	 **/
+	unregister: function(responder){
+		this.responders = this.responders.without(responder);
+	},
 
-  dispatch: function(callback, request, transport, json) {
-    this.each(function(responder) {
-      if (Object.isFunction(responder[callback])) {
-        try {
-          responder[callback].apply(responder, [request, transport, json]);
-        } catch (e) { }
-      }
-    });
-  }
+	dispatch: function(callback, request, transport, json){
+		this.each(function(responder){
+			if(Object.isFunction(responder[callback])){
+				try{
+					responder[callback].apply(responder, [request, transport, json]);
+				}
+				catch(e){
+				}
+			}
+		});
+	},
 };
 
 Object.extend(Ajax.Responders, Enumerable);
 
 Ajax.Responders.register({
-  onCreate:   function() { Ajax.activeRequestCount++ },
-  onComplete: function() { Ajax.activeRequestCount-- }
+	onCreate  : function(){
+		Ajax.activeRequestCount++;
+	},
+	onComplete: function(){
+		Ajax.activeRequestCount--;
+	}
 });

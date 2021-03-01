@@ -18,68 +18,71 @@
  *          pe.stop();
  *        }
  *      }, 5);
-**/
+ **/
 var PeriodicalExecuter = Class.create({
-  /**
-   *  new PeriodicalExecuter(callback, frequency)
-   *  - callback (Function): the function to be executed at each interval.
-   *  - frequency (Number): the amount of time, in seconds, to wait in between
-   *    callbacks.
-   *
-   *  Creates a [[PeriodicalExecuter]].
-  **/
-  initialize: function(callback, frequency) {
-    this.callback = callback;
-    this.frequency = frequency;
-    this.currentlyExecuting = false;
+	/**
+	 *  new PeriodicalExecuter(callback, frequency)
+	 *  - callback (Function): the function to be executed at each interval.
+	 *  - frequency (Number): the amount of time, in seconds, to wait in between
+	 *    callbacks.
+	 *
+	 *  Creates a [[PeriodicalExecuter]].
+	 **/
+	initialize: function(callback, frequency){
+		this.callback = callback;
+		this.frequency = frequency;
+		this.currentlyExecuting = false;
 
-    this.registerCallback();
-  },
+		this.registerCallback();
+	},
 
-  registerCallback: function() {
-    this.timer = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
-  },
+	registerCallback: function(){
+		this.timer = setInterval(this.onTimerEvent.bind(this), this.frequency * 1000);
+	},
 
-  execute: function() {
-    this.callback(this);
-  },
+	execute: function(){
+		this.callback(this);
+	},
 
-  /**
-   *  PeriodicalExecuter#stop() -> undefined
-   *
-   *  Stops the periodical executer (there will be no further triggers).
-   *
-   *  Once a [[PeriodicalExecuter]] is created, it constitues an infinite loop,
-   *  triggering at the given interval until the page unloads. This method lets
-   *  you stop it any time you want.
-   *
-   *  ##### Example
-   *
-   *  This will only alert 1, 2 and 3, then the [[PeriodicalExecuter]] stops.
-   *
-   *      var count = 0;
-   *      new PeriodicalExecuter(function(pe) {
-   *        if (++count > 3) {
-   *          pe.stop();
-   *        } else {
-   *          alert(count);
-   *        }
-   *      }, 1);
-  **/
-  stop: function() {
-    if (!this.timer) return;
-    clearInterval(this.timer);
-    this.timer = null;
-  },
+	/**
+	 *  PeriodicalExecuter#stop() -> undefined
+	 *
+	 *  Stops the periodical executer (there will be no further triggers).
+	 *
+	 *  Once a [[PeriodicalExecuter]] is created, it constitues an infinite loop,
+	 *  triggering at the given interval until the page unloads. This method lets
+	 *  you stop it any time you want.
+	 *
+	 *  ##### Example
+	 *
+	 *  This will only alert 1, 2 and 3, then the [[PeriodicalExecuter]] stops.
+	 *
+	 *      var count = 0;
+	 *      new PeriodicalExecuter(function(pe) {
+	 *        if (++count > 3) {
+	 *          pe.stop();
+	 *        } else {
+	 *          alert(count);
+	 *        }
+	 *      }, 1);
+	 **/
+	stop: function(){
+		if(!this.timer){
+			return;
+		}
+		clearInterval(this.timer);
+		this.timer = null;
+	},
 
-  onTimerEvent: function() {
-    if (!this.currentlyExecuting) {
-      try {
-        this.currentlyExecuting = true;
-        this.execute();
-      } finally {
-        this.currentlyExecuting = false;
-      }
-    }
-  }
+	onTimerEvent: function(){
+		if(!this.currentlyExecuting){
+			try{
+				this.currentlyExecuting = true;
+				this.execute();
+			}
+			finally{
+				this.currentlyExecuting = false;
+			}
+		}
+	}
 });

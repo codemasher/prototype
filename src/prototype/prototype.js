@@ -50,113 +50,116 @@
  *  arguments, and does nothing whatsoever (which is, oddly enough,
  *  blazing fast). The quintessential empty function sits, unsurprisingly,
  *  at [[Prototype.emptyFunction]] (note the lowercase first letter).
-**/
+ **/
 var Prototype = {
 
-  /**
-   *  Prototype.Version -> String
-   *
-   *  The version of the Prototype library you are using (e.g.
-   *  "<%= PROTOTYPE_VERSION %>").
-  **/
-  Version: '<%= PROTOTYPE_VERSION %>',
+	/**
+	 *  Prototype.Version -> String
+	 *
+	 *  The version of the Prototype library you are using (e.g.
+	 *  "<%= PROTOTYPE_VERSION %>").
+	 **/
+	Version: '<%= PROTOTYPE_VERSION %>',
 
-  /**
-   *  Prototype.Browser
-   *
-   *  A collection of [[Boolean]] values indicating the browser which is
-   *  currently in use. Available properties are `IE`, `Opera`, `WebKit`,
-   *  `MobileSafari` and `Gecko`.
-   *
-   *  Example
-   *
-   *      Prototype.Browser.WebKit;
-   *      //-> true, when executed in any WebKit-based browser.
-  **/
-  Browser: (function(){
-    var ua = navigator.userAgent;
-    // Opera (at least) 8.x+ has "Opera" as a [[Class]] of `window.opera`
-    // This is a safer inference than plain boolean type conversion of `window.opera`
-    var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
-    return {
-      IE:             !!window.attachEvent && !isOpera,
-      Opera:          isOpera,
-      WebKit:         ua.indexOf('AppleWebKit/') > -1,
-      Gecko:          ua.indexOf('Gecko') > -1 && ua.indexOf('KHTML') === -1,
-      MobileSafari:   /Apple.*Mobile/.test(ua)
-    }
-  })(),
+	/**
+	 *  Prototype.Browser
+	 *
+	 *  A collection of [[Boolean]] values indicating the browser which is
+	 *  currently in use. Available properties are `IE`, `Opera`, `WebKit`,
+	 *  `MobileSafari` and `Gecko`.
+	 *
+	 *  Example
+	 *
+	 *      Prototype.Browser.WebKit;
+	 *      //-> true, when executed in any WebKit-based browser.
+	 **/
+	Browser: (function(){
+		var ua = navigator.userAgent;
+		// Opera (at least) 8.x+ has "Opera" as a [[Class]] of `window.opera`
+		// This is a safer inference than plain boolean type conversion of `window.opera`
+		var isOpera = Object.prototype.toString.call(window.opera) == '[object Opera]';
+		return {
+			IE          : !!window.attachEvent && !isOpera,
+			Opera       : isOpera,
+			WebKit      : ua.indexOf('AppleWebKit/') > -1,
+			Gecko       : ua.indexOf('Gecko') > -1 && ua.indexOf('KHTML') === -1,
+			MobileSafari: /Apple.*Mobile/.test(ua),
+		};
+	})(),
 
-  /**
-   *  Prototype.BrowserFeatures
-   *
-   *  A collection of [[Boolean]] values indicating the presence of specific
-   *  browser features.
-  **/
-  BrowserFeatures: {
-    /**
-     *  Prototype.BrowserFeatures.XPath -> Boolean
-     *
-     *  Used internally to detect if the browser supports
-     *  [DOM Level 3 XPath](http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html).
-    **/
-    XPath: !!document.evaluate,
+	/**
+	 *  Prototype.BrowserFeatures
+	 *
+	 *  A collection of [[Boolean]] values indicating the presence of specific
+	 *  browser features.
+	 **/
+	BrowserFeatures: {
+		/**
+		 *  Prototype.BrowserFeatures.XPath -> Boolean
+		 *
+		 *  Used internally to detect if the browser supports
+		 *  [DOM Level 3 XPath](http://www.w3.org/TR/DOM-Level-3-XPath/xpath.html).
+		 **/
+		XPath: !!document.evaluate,
 
-    /**
-     *  Prototype.BrowserFeatures.SelectorsAPI -> Boolean
-     *
-     *  Used internally to detect if the browser supports the
-     *  [NodeSelector API](http://www.w3.org/TR/selectors-api/#nodeselector).
-    **/
-    SelectorsAPI: true,
+		/**
+		 *  Prototype.BrowserFeatures.SelectorsAPI -> Boolean
+		 *
+		 *  Used internally to detect if the browser supports the
+		 *  [NodeSelector API](http://www.w3.org/TR/selectors-api/#nodeselector).
+		 **/
+		SelectorsAPI: true,
 
-    /**
-     *  Prototype.BrowserFeatures.ElementExtensions -> Boolean
-     *
-     *  Used internally to detect if the browser supports extending html element
-     *  prototypes.
-    **/
-    ElementExtensions: true,
-    SpecificElementExtensions: true
-  },
+		/**
+		 *  Prototype.BrowserFeatures.ElementExtensions -> Boolean
+		 *
+		 *  Used internally to detect if the browser supports extending html element
+		 *  prototypes.
+		 **/
+		ElementExtensions        : true,
+		SpecificElementExtensions: true,
+	},
 
-  ScriptFragment: '<script([^>]*)>([\\S\\s]*?)<\/script\\s*>',
-  ExecutableScriptFragment: /(?:text|application)\/(?:x-)?(?:java|ecma)script/i,
-  JSONFilter: /^\/\*-secure-([\s\S]*)\*\/\s*$/,
+	ScriptFragment          : '<script([^>]*)>([\\S\\s]*?)<\/script\\s*>',
+	ExecutableScriptFragment: /(?:text|application)\/(?:x-)?(?:java|ecma)script/i,
+	JSONFilter              : /^\/\*-secure-([\s\S]*)\*\/\s*$/,
 
-  /**
-   *  Prototype.emptyFunction([argument...]) -> undefined
-   *  - argument (Object): Optional arguments
-   *
-   *  The [[Prototype.emptyFunction]] does nothing... and returns nothing!
-   *
-   *  It is used thoughout the framework to provide a fallback function in order
-   *  to cut down on conditionals. Typically you'll find it as a default value
-   *  for optional callback functions.
-  **/
-  emptyFunction: function() { },
+	/**
+	 *  Prototype.emptyFunction([argument...]) -> undefined
+	 *  - argument (Object): Optional arguments
+	 *
+	 *  The [[Prototype.emptyFunction]] does nothing... and returns nothing!
+	 *
+	 *  It is used thoughout the framework to provide a fallback function in order
+	 *  to cut down on conditionals. Typically you'll find it as a default value
+	 *  for optional callback functions.
+	 **/
+	emptyFunction: function(){
+	},
 
-  /**
-   *  Prototype.K(argument) -> argument
-   *  - argument (Object): Optional argument...
-   *
-   *  [[Prototype.K]] is Prototype's very own
-   *  [identity function](http://en.wikipedia.org/wiki/Identity_function), i.e.
-   *  it returns its `argument` untouched.
-   *
-   *  This is used throughout the framework, most notably in the [[Enumerable]]
-   *  module as a default value for iterators.
-   *
-   *  ##### Examples
-   *
-   *      Prototype.K('hello world!');
-   *      // -> 'hello world!'
-   *
-   *      Prototype.K(200);
-   *      // -> 200
-   *
-   *      Prototype.K(Prototype.K);
-   *      // -> Prototype.K
-  **/
-  K: function(x) { return x }
+	/**
+	 *  Prototype.K(argument) -> argument
+	 *  - argument (Object): Optional argument...
+	 *
+	 *  [[Prototype.K]] is Prototype's very own
+	 *  [identity function](http://en.wikipedia.org/wiki/Identity_function), i.e.
+	 *  it returns its `argument` untouched.
+	 *
+	 *  This is used throughout the framework, most notably in the [[Enumerable]]
+	 *  module as a default value for iterators.
+	 *
+	 *  ##### Examples
+	 *
+	 *      Prototype.K('hello world!');
+	 *      // -> 'hello world!'
+	 *
+	 *      Prototype.K(200);
+	 *      // -> 200
+	 *
+	 *      Prototype.K(Prototype.K);
+	 *      // -> Prototype.K
+	 **/
+	K: function(x){
+		return x;
+	},
 };

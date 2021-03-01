@@ -54,14 +54,20 @@
  *      function showArgs() {
  *        alert($A(arguments).join(', '));
  *      }
-**/
+ **/
 
-function $A(iterable) {
-  if (!iterable) return [];
-  if (iterable.toArray) return iterable.toArray();
-  var length = iterable.length || 0, results = new Array(length);
-  while (length--) results[length] = iterable[length];
-  return results;
+function $A(iterable){
+	if(!iterable){
+		return [];
+	}
+	if(iterable.toArray){
+		return iterable.toArray();
+	}
+	var length = iterable.length || 0, results = new Array(length);
+	while(length--){
+		results[length] = iterable[length];
+	}
+	return results;
 }
 
 /** section: Language, related to: Array
@@ -87,17 +93,19 @@ function $A(iterable) {
  *  This also becomes sweet when combined with [[Element]] functions:
  *
  *      $w('ads navbar funkyLinks').each(Element.hide);
-**/
+ **/
 
-function $w(string) {
-  if (!Object.isString(string)) return [];
-  string = string.strip();
-  return string ? string.split(/\s+/) : [];
+function $w(string){
+	if(!Object.isString(string)){
+		return [];
+	}
+	string = string.strip();
+	return string ? string.split(/\s+/) : [];
 }
 
 /** alias of: $A
  *  Array.from(iterable) -> Array
-**/
+ **/
 Array.from = $A;
 
 /** section: Language
@@ -179,305 +187,310 @@ Array.from = $A;
  *        // Your code working on item here...
  *      }
  *
-**/
+ **/
 
-(function() {
-  var arrayProto = Array.prototype,
-      slice = arrayProto.slice,
-      _each = arrayProto.forEach; // use native browser JS 1.6 implementation if available
+(function(){
+	var arrayProto = Array.prototype,
+	    slice      = arrayProto.slice,
+	    _each      = arrayProto.forEach; // use native browser JS 1.6 implementation if available
 
-  // Note that #map, #filter, #some, and #every take some extra steps for
-  // ES5 compliance: the context in which they're called is coerced to an
-  // object, and that object's `length` property is coerced to a finite
-  // integer. This makes it easier to use the methods as generics.
-  //
-  // This means that they behave a little differently from other methods in
-  // `Enumerable`/`Array` that don't collide with ES5, but that's OK.
+	// Note that #map, #filter, #some, and #every take some extra steps for
+	// ES5 compliance: the context in which they're called is coerced to an
+	// object, and that object's `length` property is coerced to a finite
+	// integer. This makes it easier to use the methods as generics.
+	//
+	// This means that they behave a little differently from other methods in
+	// `Enumerable`/`Array` that don't collide with ES5, but that's OK.
 
-  var filter = arrayProto.filter,
-      map = wrapNative(arrayProto.map),
-      some = wrapNative(arrayProto.some),
-      every = wrapNative(arrayProto.every);
+	var filter = arrayProto.filter,
+	    map    = wrapNative(arrayProto.map),
+	    some   = wrapNative(arrayProto.some),
+	    every  = wrapNative(arrayProto.every);
 
-  /**
-   *  Array#clear() -> Array
-   *
-   *  Clears the array (makes it empty) and returns the array reference.
-   *
-   *  ##### Example
-   *
-   *      var guys = ['Sam', 'Justin', 'Andrew', 'Dan'];
-   *      guys.clear();
-   *      // -> []
-   *      guys
-   *      // -> []
-  **/
-  function clear() {
-    this.length = 0;
-    return this;
-  }
+	/**
+	 *  Array#clear() -> Array
+	 *
+	 *  Clears the array (makes it empty) and returns the array reference.
+	 *
+	 *  ##### Example
+	 *
+	 *      var guys = ['Sam', 'Justin', 'Andrew', 'Dan'];
+	 *      guys.clear();
+	 *      // -> []
+	 *      guys
+	 *      // -> []
+	 **/
+	function clear(){
+		this.length = 0;
+		return this;
+	}
 
-  /**
-   *  Array#first() -> ?
-   *
-   *  Returns the array's first item (e.g., `array[0]`).
-  **/
-  function first() {
-    return this[0];
-  }
+	/**
+	 *  Array#first() -> ?
+	 *
+	 *  Returns the array's first item (e.g., `array[0]`).
+	 **/
+	function first(){
+		return this[0];
+	}
 
-  /**
-   *  Array#last() -> ?
-   *
-   *  Returns the array's last item (e.g., `array[array.length - 1]`).
-  **/
-  function last() {
-    return this[this.length - 1];
-  }
+	/**
+	 *  Array#last() -> ?
+	 *
+	 *  Returns the array's last item (e.g., `array[array.length - 1]`).
+	 **/
+	function last(){
+		return this[this.length - 1];
+	}
 
-  /**
-   *  Array#compact() -> Array
-   *
-   *  Returns a **copy** of the array without any `null` or `undefined` values.
-   *
-   *  ##### Example
-   *
-   *      var orig = [undefined, 'A', undefined, 'B', null, 'C'];
-   *      var copy = orig.compact();
-   *      // orig -> [undefined, 'A', undefined, 'B', null, 'C'];
-   *      // copy -> ['A', 'B', 'C'];
-  **/
-  function compact() {
-    return this.select(function(value) {
-      return value != null;
-    });
-  }
+	/**
+	 *  Array#compact() -> Array
+	 *
+	 *  Returns a **copy** of the array without any `null` or `undefined` values.
+	 *
+	 *  ##### Example
+	 *
+	 *      var orig = [undefined, 'A', undefined, 'B', null, 'C'];
+	 *      var copy = orig.compact();
+	 *      // orig -> [undefined, 'A', undefined, 'B', null, 'C'];
+	 *      // copy -> ['A', 'B', 'C'];
+	 **/
+	function compact(){
+		return this.select(function(value){
+			return value != null;
+		});
+	}
 
-  /**
-   *  Array#flatten() -> Array
-   *
-   *  Returns a flattened (one-dimensional) copy of the array, leaving
-   *  the original array unchanged.
-   *
-   *  Nested arrays are recursively injected inline. This can prove very
-   *  useful when handling the results of a recursive collection algorithm,
-   *  for instance.
-   *
-   *  ##### Example
-   *
-   *      var a = ['frank', ['bob', 'lisa'], ['jill', ['tom', 'sally']]];
-   *      var b = a.flatten();
-   *      // a -> ['frank', ['bob', 'lisa'], ['jill', ['tom', 'sally']]]
-   *      // b -> ['frank', 'bob', 'lisa', 'jill', 'tom', 'sally']
-  **/
-  function flatten() {
-    return this.inject([], function(array, value) {
-      if (Object.isArray(value))
-        return array.concat(value.flatten());
-      array.push(value);
-      return array;
-    });
-  }
+	/**
+	 *  Array#flatten() -> Array
+	 *
+	 *  Returns a flattened (one-dimensional) copy of the array, leaving
+	 *  the original array unchanged.
+	 *
+	 *  Nested arrays are recursively injected inline. This can prove very
+	 *  useful when handling the results of a recursive collection algorithm,
+	 *  for instance.
+	 *
+	 *  ##### Example
+	 *
+	 *      var a = ['frank', ['bob', 'lisa'], ['jill', ['tom', 'sally']]];
+	 *      var b = a.flatten();
+	 *      // a -> ['frank', ['bob', 'lisa'], ['jill', ['tom', 'sally']]]
+	 *      // b -> ['frank', 'bob', 'lisa', 'jill', 'tom', 'sally']
+	 **/
+	function flatten(){
+		return this.inject([], function(array, value){
+			if(Object.isArray(value)){
+				return array.concat(value.flatten());
+			}
+			array.push(value);
+			return array;
+		});
+	}
 
-  /**
-   *  Array#without(value[, value...]) -> Array
-   *  - value (?): A value to exclude.
-   *
-   *  Produces a new version of the array that does not contain any of the
-   *  specified values, leaving the original array unchanged.
-   *
-   *  ##### Examples
-   *
-   *      [3, 5, 6].without(3)
-   *      // -> [5, 6]
-   *
-   *      [3, 5, 6, 20].without(20, 6)
-   *      // -> [3, 5]
-  **/
-  function without() {
-    var values = slice.call(arguments, 0);
-    return this.select(function(value) {
-      return !values.include(value);
-    });
-  }
+	/**
+	 *  Array#without(value[, value...]) -> Array
+	 *  - value (?): A value to exclude.
+	 *
+	 *  Produces a new version of the array that does not contain any of the
+	 *  specified values, leaving the original array unchanged.
+	 *
+	 *  ##### Examples
+	 *
+	 *      [3, 5, 6].without(3)
+	 *      // -> [5, 6]
+	 *
+	 *      [3, 5, 6, 20].without(20, 6)
+	 *      // -> [3, 5]
+	 **/
+	function without(){
+		var values = slice.call(arguments, 0);
+		return this.select(function(value){
+			return !values.include(value);
+		});
+	}
 
-  /**
-   *  Array#reverse([inline = true]) -> Array
-   *  - inline (Boolean): Whether to modify the array in place. Defaults to `true`.
-   *      Clones the original array when `false`.
-   *
-   *  Reverses the array's contents, optionally cloning it first.
-   *
-   *  ##### Examples
-   *
-   *      // Making a copy
-   *      var nums = [3, 5, 6, 1, 20];
-   *      var rev = nums.reverse(false);
-   *      // nums -> [3, 5, 6, 1, 20]
-   *      // rev -> [20, 1, 6, 5, 3]
-   *
-   *      // Working inline
-   *      var nums = [3, 5, 6, 1, 20];
-   *      nums.reverse();
-   *      // nums -> [20, 1, 6, 5, 3]
-  **/
-  function reverse(inline) {
-    return (inline === false ? this.toArray() : this)._reverse();
-  }
+	/**
+	 *  Array#reverse([inline = true]) -> Array
+	 *  - inline (Boolean): Whether to modify the array in place. Defaults to `true`.
+	 *      Clones the original array when `false`.
+	 *
+	 *  Reverses the array's contents, optionally cloning it first.
+	 *
+	 *  ##### Examples
+	 *
+	 *      // Making a copy
+	 *      var nums = [3, 5, 6, 1, 20];
+	 *      var rev = nums.reverse(false);
+	 *      // nums -> [3, 5, 6, 1, 20]
+	 *      // rev -> [20, 1, 6, 5, 3]
+	 *
+	 *      // Working inline
+	 *      var nums = [3, 5, 6, 1, 20];
+	 *      nums.reverse();
+	 *      // nums -> [20, 1, 6, 5, 3]
+	 **/
+	function reverse(inline){
+		return (inline === false ? this.toArray() : this)._reverse();
+	}
 
-  /**
-   *  Array#uniq([sorted = false]) -> Array
-   *  - sorted (Boolean): Whether the array has already been sorted. If `true`,
-   *    a less-costly algorithm will be used.
-   *
-   *  Produces a duplicate-free version of an array. If no duplicates are
-   *  found, the original array is returned.
-   *
-   *  On large arrays when `sorted` is `false`, this method has a potentially
-   *  large performance cost.
-   *
-   *  ##### Examples
-   *
-   *      [1, 3, 2, 1].uniq();
-   *      // -> [1, 2, 3]
-   *
-   *      ['A', 'a'].uniq();
-   *      // -> ['A', 'a'] (because String comparison is case-sensitive)
-  **/
-  function uniq(sorted) {
-    return this.inject([], function(array, value, index) {
-      if (0 == index || (sorted ? array.last() != value : !array.include(value)))
-        array.push(value);
-      return array;
-    });
-  }
+	/**
+	 *  Array#uniq([sorted = false]) -> Array
+	 *  - sorted (Boolean): Whether the array has already been sorted. If `true`,
+	 *    a less-costly algorithm will be used.
+	 *
+	 *  Produces a duplicate-free version of an array. If no duplicates are
+	 *  found, the original array is returned.
+	 *
+	 *  On large arrays when `sorted` is `false`, this method has a potentially
+	 *  large performance cost.
+	 *
+	 *  ##### Examples
+	 *
+	 *      [1, 3, 2, 1].uniq();
+	 *      // -> [1, 2, 3]
+	 *
+	 *      ['A', 'a'].uniq();
+	 *      // -> ['A', 'a'] (because String comparison is case-sensitive)
+	 **/
+	function uniq(sorted){
+		return this.inject([], function(array, value, index){
+			if(0 == index || (sorted ? array.last() != value : !array.include(value))){
+				array.push(value);
+			}
+			return array;
+		});
+	}
 
-  /**
-   *  Array#intersect(array) -> Array
-   *  - array (Array): A collection of values.
-   *
-   *  Returns an array containing every item that is shared between the two
-   *  given arrays.
-  **/
-  function intersect(array) {
-    return this.uniq().findAll(function(item) {
-      return array.indexOf(item) !== -1;
-    });
-  }
+	/**
+	 *  Array#intersect(array) -> Array
+	 *  - array (Array): A collection of values.
+	 *
+	 *  Returns an array containing every item that is shared between the two
+	 *  given arrays.
+	 **/
+	function intersect(array){
+		return this.uniq().findAll(function(item){
+			return array.indexOf(item) !== -1;
+		});
+	}
 
-  /** alias of: Array#clone
-   *  Array#toArray() -> Array
-  **/
+	/** alias of: Array#clone
+	 *  Array#toArray() -> Array
+	 **/
 
-  /**
-   *  Array#clone() -> Array
-   *
-   *  Returns a duplicate of the array, leaving the original array intact.
-  **/
-  function clone() {
-    return slice.call(this, 0);
-  }
+	/**
+	 *  Array#clone() -> Array
+	 *
+	 *  Returns a duplicate of the array, leaving the original array intact.
+	 **/
+	function clone(){
+		return slice.call(this, 0);
+	}
 
-  /** related to: Enumerable#size
-   *  Array#size() -> Number
-   *
-   *  Returns the size of the array (e.g., `array.length`).
-   *
-   *  This is just a local optimization of the mixed-in [[Enumerable#size]]
-   *  which avoids array cloning and uses the array's native length property.
-  **/
-  function size() {
-    return this.length;
-  }
+	/** related to: Enumerable#size
+	 *  Array#size() -> Number
+	 *
+	 *  Returns the size of the array (e.g., `array.length`).
+	 *
+	 *  This is just a local optimization of the mixed-in [[Enumerable#size]]
+	 *  which avoids array cloning and uses the array's native length property.
+	 **/
+	function size(){
+		return this.length;
+	}
 
-  /** related to: Object.inspect
-   *  Array#inspect() -> String
-   *
-   *  Returns the debug-oriented string representation of an array.
-   *
-   *  ##### Example
-   *
-   *      ['Apples', {good: 'yes', bad: 'no'}, 3, 34].inspect()
-   *      // -> "['Apples', [object Object], 3, 34]"
-  **/
-  function inspect() {
-    return '[' + this.map(Object.inspect).join(', ') + ']';
-  }
+	/** related to: Object.inspect
+	 *  Array#inspect() -> String
+	 *
+	 *  Returns the debug-oriented string representation of an array.
+	 *
+	 *  ##### Example
+	 *
+	 *      ['Apples', {good: 'yes', bad: 'no'}, 3, 34].inspect()
+	 *      // -> "['Apples', [object Object], 3, 34]"
+	 **/
+	function inspect(){
+		return '[' + this.map(Object.inspect).join(', ') + ']';
+	}
 
-  // Certain ES5 array methods have the same names as Prototype array methods
-  // and perform the same functions.
-  //
-  // Prototype's implementations of these methods differ from the ES5 spec in
-  // the way a missing iterator function is handled. Prototype uses
-  // `Prototype.K` as a default iterator, while ES5 specifies that a
-  // `TypeError` must be thrown. Implementing the ES5 spec completely would
-  // break backward compatibility and would force users to pass `Prototype.K`
-  // manually.
-  //
-  // Instead, if native versions of these methods exist, we wrap the existing
-  // methods with our own behavior. This has very little performance impact.
-  // It violates the spec by suppressing `TypeError`s for certain methods,
-  // but that's an acceptable trade-off.
+	// Certain ES5 array methods have the same names as Prototype array methods
+	// and perform the same functions.
+	//
+	// Prototype's implementations of these methods differ from the ES5 spec in
+	// the way a missing iterator function is handled. Prototype uses
+	// `Prototype.K` as a default iterator, while ES5 specifies that a
+	// `TypeError` must be thrown. Implementing the ES5 spec completely would
+	// break backward compatibility and would force users to pass `Prototype.K`
+	// manually.
+	//
+	// Instead, if native versions of these methods exist, we wrap the existing
+	// methods with our own behavior. This has very little performance impact.
+	// It violates the spec by suppressing `TypeError`s for certain methods,
+	// but that's an acceptable trade-off.
 
-  function wrapNative(method) {
-    return function() {
-      if (arguments.length === 0) {
-        // No iterator was given. Instead of throwing a `TypeError`, use
-        // `Prototype.K` as the default iterator.
-        return method.call(this, Prototype.K);
-      } else if (arguments[0] === undefined) {
-        // Same as above.
-        var args = slice.call(arguments, 1);
-        args.unshift(Prototype.K);
-        return method.apply(this, args);
-      } else {
-        // Pass straight through to the native method.
-        return method.apply(this, arguments);
-      }
-    };
-  }
+	function wrapNative(method){
+		return function(){
+			if(arguments.length === 0){
+				// No iterator was given. Instead of throwing a `TypeError`, use
+				// `Prototype.K` as the default iterator.
+				return method.call(this, Prototype.K);
+			}
+			else if(arguments[0] === undefined){
+				// Same as above.
+				var args = slice.call(arguments, 1);
+				args.unshift(Prototype.K);
+				return method.apply(this, args);
+			}
+			else{
+				// Pass straight through to the native method.
+				return method.apply(this, arguments);
+			}
+		};
+	}
 
-  // We used to define an `inject` method here that relied on ES5's
-  // `Array#reduce` (if present), but using `reduce` prevents us from
-  // catching a thrown `$break`. So arrays now use the standard
-  // `Enumerable.inject` like they did previously.
+	// We used to define an `inject` method here that relied on ES5's
+	// `Array#reduce` (if present), but using `reduce` prevents us from
+	// catching a thrown `$break`. So arrays now use the standard
+	// `Enumerable.inject` like they did previously.
 
-  Object.extend(arrayProto, Enumerable);
+	Object.extend(arrayProto, Enumerable);
 
-  // Enumerable's `entries` method is no longer safe to mixin to arrays, as
-  // it conflicts with an ES6 method. But it can still be mixed into other
-  // things.
-  if (arrayProto.entries === Enumerable.entries) {
-    delete arrayProto.entries;
-  }
+	// Enumerable's `entries` method is no longer safe to mixin to arrays, as
+	// it conflicts with an ES6 method. But it can still be mixed into other
+	// things.
+	if(arrayProto.entries === Enumerable.entries){
+		delete arrayProto.entries;
+	}
 
-  if (!arrayProto._reverse)
-    arrayProto._reverse = arrayProto.reverse;
+	if(!arrayProto._reverse){
+		arrayProto._reverse = arrayProto.reverse;
+	}
 
-  Object.extend(arrayProto, {
-    _each:     _each,
+	Object.extend(arrayProto, {
+		_each: _each,
 
-    map:       map,
-    collect:   map,
-    select:    filter,
-    findAll:   filter,
-    some:      some,
-    any:       some,
-    every:     every,
-    all:       every,
+		map    : map,
+		collect: map,
+		select : filter,
+		findAll: filter,
+		some   : some,
+		any    : some,
+		every  : every,
+		all    : every,
 
-    clear:     clear,
-    first:     first,
-    last:      last,
-    compact:   compact,
-    flatten:   flatten,
-    without:   without,
-    reverse:   reverse,
-    uniq:      uniq,
-    intersect: intersect,
-    clone:     clone,
-    toArray:   clone,
-    size:      size,
-    inspect:   inspect
-  });
+		clear    : clear,
+		first    : first,
+		last     : last,
+		compact  : compact,
+		flatten  : flatten,
+		without  : without,
+		reverse  : reverse,
+		uniq     : uniq,
+		intersect: intersect,
+		clone    : clone,
+		toArray  : clone,
+		size     : size,
+		inspect  : inspect
+	});
 })();
