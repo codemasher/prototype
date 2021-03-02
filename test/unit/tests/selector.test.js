@@ -74,10 +74,13 @@ suite('Selector', function () {
     assert.enumEqual([$('item_3')], $$('li#item_3[class]'), 'li#item_3[class]');
   });
 
+  // Unescaped # errors out with "Syntax error, unrecognized expression"
+  // https://github.com/jquery/jquery/issues/2824
   test('tag + attr equality (a[href="#"])', function () {
-    assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href="#"]'));
-    assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href=#]'));
+    assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href="\\#"]'));
+    assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href=\\#]'));
   });
+
 
   test('tag + attr whitespace-tokenized (a[class~="internal"])', function () {
     assert.enumEqual($('link_1', 'link_2'), $$('a[class~="internal"]'), "a[class~=\"internal\"]");

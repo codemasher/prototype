@@ -17,7 +17,7 @@ module PrototypeHelper
   TMP_DIR       = File.join(TEST_UNIT_DIR, 'tmp')
   VERSION       = YAML.load(IO.read(File.join(SRC_DIR, 'constants.yml')))['PROTOTYPE_VERSION']
 
-  DEFAULT_SELECTOR_ENGINE = 'sizzle'
+#  DEFAULT_SELECTOR_ENGINE = 'sizzle'
 
   host = RbConfig::CONFIG['host']
   IS_WINDOWS = host.include?('mswin') || host.include?('mingw32')
@@ -245,7 +245,7 @@ task :dist do
   PrototypeHelper.sprocketize(
     :path => 'src',
     :source => 'prototype.js',
-    :selector_engine => ENV['SELECTOR_ENGINE'] || PrototypeHelper::DEFAULT_SELECTOR_ENGINE
+#    :selector_engine => ENV['SELECTOR_ENGINE'] || PrototypeHelper::DEFAULT_SELECTOR_ENGINE
   )
 end
 

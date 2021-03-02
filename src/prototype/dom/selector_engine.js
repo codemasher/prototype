@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 Prototype._original_property = window.Sizzle;
 
 ;(function () {
@@ -15,7 +16,7 @@ Prototype._original_property = window.Sizzle;
   }
 })();
 
-//= require "repository/dist/sizzle"
+//= require "../../../vendor/sizzle/sizzle"
 
 ;(function() {
   if (typeof Sizzle !== 'undefined') {
@@ -46,7 +47,7 @@ Prototype._original_property = window.Sizzle;
   }
 
   function match(element, selector) {
-    return engine.matches(selector, [element]).length == 1;
+    return engine.matches(selector, [element]).length === 1;
   }
 
   Prototype.Selector.engine = engine;
