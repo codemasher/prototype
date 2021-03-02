@@ -799,7 +799,7 @@ Object.extend(String.prototype, (function(){
 	 *      //-> false
 	 **/
 	function include(pattern){
-		return this.indexOf(pattern) > -1;
+		return this.indexOf(pattern) !== -1;
 	}
 
 	/**
@@ -945,7 +945,8 @@ Object.extend(String.prototype, (function(){
 		unfilterJSON  : unfilterJSON,
 		isJSON        : isJSON,
 		evalJSON      : evalJSON,
-		include       : include,
+		//ECMA 6 supports contains(), if it exists map include() to contains()
+		include       : String.prototype.contains || include,
 		// Firefox 18+ supports String.prototype.startsWith, String.prototype.endsWith
 		startsWith : String.prototype.startsWith || startsWith,
 		endsWith   : String.prototype.endsWith || endsWith,
