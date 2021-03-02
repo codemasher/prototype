@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 Prototype._original_property = window.Sizzle;
 
-;(function () {
+(function () {
   function fakeDefine(fn) {
     Prototype._actual_sizzle = fn();
   }
@@ -18,7 +18,7 @@ Prototype._original_property = window.Sizzle;
 
 //= require "../../../vendor/sizzle/sizzle"
 
-;(function() {
+(function() {
   if (typeof Sizzle !== 'undefined') {
     // Sizzle was properly defined.
     return;
@@ -41,7 +41,7 @@ Prototype._original_property = window.Sizzle;
   }
 })();
 
-;(function(engine) {
+(function(engine) {
   function select(selector, scope) {
     return engine(selector, scope || document);
   }
