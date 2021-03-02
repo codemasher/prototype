@@ -118,6 +118,13 @@ var Prototype = {
 		 **/
 		ElementExtensions        : true,
 		SpecificElementExtensions: true,
+
+		/**
+		 *  Prototype.BrowserFeatures.Touch -> Boolean
+		 *
+		 *  Detects if the browser supports touch interaction.
+		 **/
+		Touch: navigator.msMaxTouchPoints || ('ontouchstart' in document.documentElement)
 	},
 
 	ScriptFragment          : '<script([^>]*)>([\\S\\s]*?)<\/script\\s*>',
