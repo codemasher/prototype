@@ -124,7 +124,26 @@ var Prototype = {
 		 *
 		 *  Detects if the browser supports touch interaction.
 		 **/
-		Touch: navigator.msMaxTouchPoints || ('ontouchstart' in document.documentElement)
+		Touch: navigator.msMaxTouchPoints || ('ontouchstart' in document.documentElement),
+
+		/**
+		 * Prototype.BrowserFeatures.Symbol -> Boolean
+		 *
+		 * Detects if the Browser supports the Symbol data type (ES6)
+		 *
+		 * [Global Objects/Symbol](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Symbol)
+		 **/
+		Symbol: typeof Symbol !== 'undefined',
+
+		/**
+		 * Prototype.BrowserFeatures.BigInt -> Boolean
+		 *
+		 * Detects if the Browser supports the BigInt data type (ES6)
+		 *
+		 * [Global Objects/BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt)
+		 **/
+		BigInt: typeof BigInt !== 'undefined',
+
 	},
 
 	ScriptFragment          : '<script([^>]*)>([\\S\\s]*?)<\/script\\s*>',
